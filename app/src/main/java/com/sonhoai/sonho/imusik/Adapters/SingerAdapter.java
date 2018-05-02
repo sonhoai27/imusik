@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sonhoai.sonho.imusik.Activities.PlayerActivity;
+import com.sonhoai.sonho.imusik.Fragments.DetailPlayListFragment;
+import com.sonhoai.sonho.imusik.MainActivity;
 import com.sonhoai.sonho.imusik.Models.Singer;
 import com.sonhoai.sonho.imusik.R;
 import com.squareup.picasso.Picasso;
@@ -63,8 +65,7 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.ViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, PlayerActivity.class);
-                    context.startActivity(intent);
+
                 }
             });
         }

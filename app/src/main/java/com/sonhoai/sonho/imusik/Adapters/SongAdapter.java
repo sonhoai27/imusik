@@ -1,5 +1,6 @@
 package com.sonhoai.sonho.imusik.Adapters;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,12 +11,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,17 +42,19 @@ import java.util.TimerTask;
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     private Context context;
     private List<Song> songList;
+    private int layout;
 
-    public SongAdapter(Context context, List<Song> songList) {
+    public SongAdapter(Context context, List<Song> songList, int view) {
         this.context = context;
         this.songList = songList;
+        this.layout = view;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_song, parent, false);
+        View view = inflater.inflate(layout, parent, false);
         return new ViewHolder(view);
     }
 
@@ -73,6 +78,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtName, txtNameSinger, txtLuotNghe;
+        private ImageButton btnMoreInfoSong;
         private ImageView imgCover;
         public ViewHolder(View itemView) {
             super(itemView);
@@ -81,6 +87,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             txtName = itemView.findViewById(R.id.txtSongName);
             txtLuotNghe = itemView.findViewById(R.id.txtSongLuotNghe);
             txtNameSinger = itemView.findViewById(R.id.txtSongSinger);
+
+            if(layout == R.layout.item_song_pl){
+                btnMoreInfoSong = itemView.findViewById(R.id.btnMoreInfoSong);
+                btnMoreInfoSong.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        delete(getAdapterPosition());
+                    }
+                });
+            }
 
             handleOnLongClick(itemView);
             handleOnClick(itemView, null, 0);
@@ -132,7 +148,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     Window dialogWindow = alertDialog.getWindow();
                     WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.alpha = 0.88f;
                     lp.x = 0; // The new position of the X coordinates
                     lp.y = 32; // The new position of the Y coordinates
                     dialogWindow.setGravity(Gravity.CENTER | Gravity.BOTTOM);
@@ -153,5 +168,26 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                 }
             });
         }
+    }
+
+    private void delete(final int id){
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.myDialog));
+        builder.setTitle("Do you want to remove it?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, songList.get(id).getNameSong(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
     }
 }

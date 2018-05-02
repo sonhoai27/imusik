@@ -25,6 +25,7 @@ import com.sonhoai.sonho.imusik.API.Post;
 import com.sonhoai.sonho.imusik.Adapters.PlayListAdapter;
 import com.sonhoai.sonho.imusik.Adapters.TabAdapter;
 import com.sonhoai.sonho.imusik.Constants.Connect;
+import com.sonhoai.sonho.imusik.Constants.User;
 import com.sonhoai.sonho.imusik.Interface.CallBack;
 import com.sonhoai.sonho.imusik.Models.Playlist;
 import com.sonhoai.sonho.imusik.R;
@@ -49,8 +50,8 @@ private PlayListAdapter playListAdapter;
     private RecyclerView rvPlaylist;
     private Button btnCreatePlaylist;
     private ImageView imgNull;
-    private String idUser = SharedPreferencesHelper.getInstance(getContext()).getSharePre("USERINFO", Context.MODE_PRIVATE).getString("idUser", "");
-    private String token = SharedPreferencesHelper.getInstance(getContext()).getSharePre("USERINFO", Context.MODE_PRIVATE).getString("tokenUser", "");
+//    private String idUser = SharedPreferencesHelper.getInstance(getContext()).getSharePre("USERINFO", Context.MODE_PRIVATE).getString("idUser", "");
+//    private String token = SharedPreferencesHelper.getInstance(getContext()).getSharePre("USERINFO", Context.MODE_PRIVATE).getString("tokenUser", "");
     public LibraryFragment() {
     }
 
@@ -143,7 +144,7 @@ private PlayListAdapter playListAdapter;
             public void onFail(String result) {
 
             }
-        }).execute("/PlaylistsApi/?list="+idUser+"&token="+token);
+        }).execute("/PlaylistsApi/?list="+ User.getInstance(getContext()).idUser+"&token="+User.getInstance(getContext()).token);
     }
 
     private void createPlayList(){
@@ -166,7 +167,7 @@ private PlayListAdapter playListAdapter;
 
                         JSONObject object = new JSONObject();
                         try {
-                            object.put("idUser", Integer.valueOf(idUser));
+                            object.put("idUser", Integer.valueOf(User.getInstance(getContext()).idUser));
                             object.put("namePlaylist", editText.getText().toString());
                             object.put("created_date", currentDateTimeString);
                             object.put("imagePlaylist", Connect.PLAYLIS);

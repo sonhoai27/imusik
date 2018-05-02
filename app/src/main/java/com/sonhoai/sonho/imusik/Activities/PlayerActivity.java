@@ -1,6 +1,7 @@
 package com.sonhoai.sonho.imusik.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -117,7 +118,6 @@ public class PlayerActivity extends AppCompatActivity {
                 Window dialogWindow = alertDialog.getWindow();
                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 
-                lp.alpha = 0.9f;
                 lp.x = 0;
                 lp.y = 16; // The new position of the Y coordinates
                 dialogWindow.setGravity(Gravity.CENTER | Gravity.BOTTOM);
@@ -230,6 +230,6 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.slide_up, R.anim.slide_bottom);
+        overridePendingTransition(0, 0);
     }
 }

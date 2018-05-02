@@ -2,6 +2,9 @@ package com.sonhoai.sonho.imusik.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sonhoai.sonho.imusik.Fragments.DetailPlayListFragment;
 import com.sonhoai.sonho.imusik.Models.Playlist;
 import com.sonhoai.sonho.imusik.R;
 import com.sonhoai.sonho.imusik.Util.CircleTransformHelper;
@@ -60,6 +64,26 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.ViewHo
             txtName = itemView.findViewById(R.id.txtPlaylistName);
             txtDate = itemView.findViewById(R.id.txtPlaylistDate);
             cover = itemView.findViewById(R.id.imgPlaylistCover);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return false;
+                }
+            });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showSongView(getAdapterPosition());
+                }
+            });
         }
+    }
+
+    private void showSongView(int po){
+        DetailPlayListFragment fragmentDialog = DetailPlayListFragment.newInstance(String.valueOf(playlists.get(po).getId()), playlists.get(po).getName());
+        fragmentDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppDialogFullFragmentTheme);
+        FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
+        fragmentDialog.show(fm, "AAA");
     }
 }

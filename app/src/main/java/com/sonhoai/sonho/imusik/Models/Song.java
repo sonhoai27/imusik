@@ -1,6 +1,5 @@
 package com.sonhoai.sonho.imusik.Models;
 
-import java.io.Serializable;
 
 public class Song{
     private int id;

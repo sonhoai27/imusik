@@ -3,11 +3,13 @@ package com.sonhoai.sonho.imusik;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.LinearGradient;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +35,8 @@ import com.sonhoai.sonho.imusik.Util.SharedPreferencesHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity{
     public static TextView txtNameCurrentSong;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             String token =  SharedPreferencesHelper.getInstance(getApplicationContext()).getSharePre("USERINFO", Context.MODE_PRIVATE).getString("tokenUser", "");
+            Log.i("AAAA", token);
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     setFragment(HomeFragment.newInstance());
@@ -120,8 +125,9 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PlayerActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_up,R.anim.slide_bottom);
+                overridePendingTransition(0, 0);
             }
         });
     }
