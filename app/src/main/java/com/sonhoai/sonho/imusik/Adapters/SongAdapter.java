@@ -5,6 +5,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,11 +20,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sonhoai.sonho.imusik.API.Get;
 import com.sonhoai.sonho.imusik.Constants.Connect;
+import com.sonhoai.sonho.imusik.Fragments.LoginFragmentDialog;
+import com.sonhoai.sonho.imusik.Fragments.RateFragment;
 import com.sonhoai.sonho.imusik.Interface.CallBack;
 import com.sonhoai.sonho.imusik.MainActivity;
 import com.sonhoai.sonho.imusik.Models.Playlist;
@@ -117,18 +123,22 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
                     //khai bao
 
-                    TextView titleSong, titleSinger;
+                    final TextView titleSong, titleSinger, txtRbText;
                     ImageView cover;
+                    final RatingBar rbNum;
                     LinearLayout layoutPlayNow;
                     LinearLayout addToPlayList;
+                    LinearLayout btnRateSong;
                     //anh xa
 
+                    rbNum = dialogView.findViewById(R.id.rbNum);
+                    txtRbText = dialogView.findViewById(R.id.txtRbText);
                     titleSinger = dialogView.findViewById(R.id.dPlayerMoreSinger);
                     titleSong = dialogView.findViewById(R.id.dPlayerMoreTitle);
                     cover = dialogView.findViewById(R.id.dPlayerMoreCover);
                     layoutPlayNow = dialogView.findViewById(R.id.layoutPlayNow);
                     addToPlayList = dialogView.findViewById(R.id.addToPlayList);
-
+                    btnRateSong = dialogView.findViewById(R.id.btnRateSong);
                     final AlertDialog alertDialog = builder.create();
 
                     layoutPlayNow.setVisibility(View.VISIBLE);
@@ -158,6 +168,37 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     titleSong.setText(song.getNameSong());
 
                     handleOnClick(layoutPlayNow, alertDialog, 1);
+                    getRating(new CallBack<String>() {
+                        @Override
+                        public void onSuccess(String result) {
+                            try {
+                                JSONObject object = new JSONObject(result);
+                                int a = object.getInt("noLove");
+                                int b = object.getInt("littleLove");
+                                int c = object.getInt("love");
+                                int d = object.getInt("lotsofLove");
+                                int e = object.getInt("superLove");
+                                double sum = (((a*1)+(b*2)+(c*3)+(d*4)+(e*5))/(a+b+c+d+e));
+                                txtRbText.setText(sum+"");
+                                rbNum.setRating((float) sum);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFail(String result) {
+
+                        }
+                    }, songList.get(getAdapterPosition()).getId());
+
+                    btnRateSong.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showRatingView(songList.get(getAdapterPosition()).getId());
+                            alertDialog.dismiss();
+                        }
+                    });
                     //show
                     alertDialog.show();
                     return false;
@@ -238,6 +279,27 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
             }
         }).execute("/PlaylistsApi/?list="+ SharedPreferencesHelper.getInstance(context).getIdUser()+"&token="+SharedPreferencesHelper.getInstance(context).getToken());
+    }
+
+    private void getRating(final CallBack<String> callBack, int idSong){
+        new Get(new CallBack<String>() {
+            @Override
+            public void onSuccess(String result) {
+                callBack.onSuccess(result);
+            }
+
+            @Override
+            public void onFail(String result) {
+
+            }
+        }).execute("/Loves/?idSong="+idSong+"&idUser="+SharedPreferencesHelper.getInstance(context).getIdUser()+"&token="+SharedPreferencesHelper.getInstance(context).getToken());
+    }
+
+    private void showRatingView(int idSong){
+        RateFragment fragmentDialog = RateFragment.newInstance(idSong+"");
+        fragmentDialog.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppDialogFragmentTheme);
+        FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
+        fragmentDialog.show(fm, "Rate");
     }
 
 }

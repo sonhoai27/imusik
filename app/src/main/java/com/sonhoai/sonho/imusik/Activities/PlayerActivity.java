@@ -23,17 +23,24 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.sonhoai.sonho.imusik.API.Get;
 import com.sonhoai.sonho.imusik.Constants.Connect;
 import com.sonhoai.sonho.imusik.Constants.State;
+import com.sonhoai.sonho.imusik.Interface.CallBack;
 import com.sonhoai.sonho.imusik.MainActivity;
 import com.sonhoai.sonho.imusik.Models.Song;
 import com.sonhoai.sonho.imusik.R;
 import com.sonhoai.sonho.imusik.Util.CircleTransformHelper;
 import com.sonhoai.sonho.imusik.Util.PlayerHelper;
+import com.sonhoai.sonho.imusik.Util.SharedPreferencesHelper;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PlayerActivity extends AppCompatActivity {
     private Handler handler;
@@ -100,12 +107,14 @@ public class PlayerActivity extends AppCompatActivity {
 
                 //khai bao
 
-                TextView titleSong, titleSinger;
+                final TextView titleSong, titleSinger, txtRbText;
                 ImageView cover;
+                final RatingBar rbNum;
                 LinearLayout rateThisSong;
 
                 //anh xa
-
+                rbNum = dialogView.findViewById(R.id.rbNum);
+                txtRbText = dialogView.findViewById(R.id.txtRbText);
                 titleSinger = dialogView.findViewById(R.id.dPlayerMoreSinger);
                 titleSong = dialogView.findViewById(R.id.dPlayerMoreTitle);
                 cover = dialogView.findViewById(R.id.dPlayerMoreCover);
@@ -134,14 +143,29 @@ public class PlayerActivity extends AppCompatActivity {
                     titleSong.setText(song.getNameSong());
 
 
-//                    //rate this song
-//                    rateThisSong.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            rateSong(song);
-//                            alertDialog.dismiss();
-//                        }
-//                    });
+                    getRating(new CallBack<String>() {
+                        @Override
+                        public void onSuccess(String result) {
+                            try {
+                                JSONObject object = new JSONObject(result);
+                                int a = object.getInt("noLove");
+                                int b = object.getInt("littleLove");
+                                int c = object.getInt("love");
+                                int d = object.getInt("lotsofLove");
+                                int e = object.getInt("superLove");
+                                double sum = (((a*5)+(b*4)+(c*3)+(d*2)+(e*1))/(a+b+c+d+e));
+                                txtRbText.setText(sum+"");
+                                rbNum.setRating((float) sum);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFail(String result) {
+
+                        }
+                    }, PlayerHelper.getInstance().getCurrentSong().getId());
                 }
 
                 //show
@@ -231,5 +255,19 @@ public class PlayerActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, 0);
+    }
+
+    private void getRating(final CallBack<String> callBack, int idSong){
+        new Get(new CallBack<String>() {
+            @Override
+            public void onSuccess(String result) {
+                callBack.onSuccess(result);
+            }
+
+            @Override
+            public void onFail(String result) {
+
+            }
+        }).execute("/Loves/?idSong="+idSong+"&idUser="+ SharedPreferencesHelper.getInstance(context).getIdUser()+"&token="+SharedPreferencesHelper.getInstance(context).getToken());
     }
 }
