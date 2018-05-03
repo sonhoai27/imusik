@@ -1,15 +1,9 @@
 package com.sonhoai.sonho.imusik.Fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextThemeWrapper;
@@ -23,9 +17,7 @@ import android.widget.ImageView;
 import com.sonhoai.sonho.imusik.API.Get;
 import com.sonhoai.sonho.imusik.API.Post;
 import com.sonhoai.sonho.imusik.Adapters.PlayListAdapter;
-import com.sonhoai.sonho.imusik.Adapters.TabAdapter;
 import com.sonhoai.sonho.imusik.Constants.Connect;
-import com.sonhoai.sonho.imusik.Constants.User;
 import com.sonhoai.sonho.imusik.Interface.CallBack;
 import com.sonhoai.sonho.imusik.Models.Playlist;
 import com.sonhoai.sonho.imusik.R;
@@ -42,16 +34,11 @@ import java.util.Date;
 import java.util.List;
 
 public class LibraryFragment extends Fragment {
-//    private TabLayout tabLayout;
-//    private ViewPager vpForTabLayout;
-//    TabAdapter tabAdapter;
 private PlayListAdapter playListAdapter;
     private List<Playlist> playlists;
     private RecyclerView rvPlaylist;
     private Button btnCreatePlaylist;
     private ImageView imgNull;
-//    private String idUser = SharedPreferencesHelper.getInstance(getContext()).getSharePre("USERINFO", Context.MODE_PRIVATE).getString("idUser", "");
-//    private String token = SharedPreferencesHelper.getInstance(getContext()).getSharePre("USERINFO", Context.MODE_PRIVATE).getString("tokenUser", "");
     public LibraryFragment() {
     }
 
@@ -144,7 +131,7 @@ private PlayListAdapter playListAdapter;
             public void onFail(String result) {
 
             }
-        }).execute("/PlaylistsApi/?list="+ User.getInstance(getContext()).idUser+"&token="+User.getInstance(getContext()).token);
+        }).execute("/PlaylistsApi/?list="+ SharedPreferencesHelper.getInstance(getContext()).getIdUser()+"&token="+SharedPreferencesHelper.getInstance(getContext()).getToken());
     }
 
     private void createPlayList(){
@@ -167,7 +154,7 @@ private PlayListAdapter playListAdapter;
 
                         JSONObject object = new JSONObject();
                         try {
-                            object.put("idUser", Integer.valueOf(User.getInstance(getContext()).idUser));
+                            object.put("idUser", Integer.valueOf(SharedPreferencesHelper.getInstance(getContext()).getIdUser()));
                             object.put("namePlaylist", editText.getText().toString());
                             object.put("created_date", currentDateTimeString);
                             object.put("imagePlaylist", Connect.PLAYLIS);

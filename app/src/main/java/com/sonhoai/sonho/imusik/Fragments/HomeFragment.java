@@ -184,7 +184,7 @@ public class HomeFragment extends Fragment {
                 false
         );
         rcSong.setLayoutManager(manager);
-        songAdapter = new SongAdapter(getContext(), songs, R.layout.item_song);
+        songAdapter = new SongAdapter(getContext(), songs);
         rcSong.setAdapter(songAdapter);
         doGetSong();
     }

@@ -9,7 +9,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.JsonToken;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,12 +18,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.sonhoai.sonho.imusik.API.Get;
-import com.sonhoai.sonho.imusik.Adapters.ForYouAdapter;
-import com.sonhoai.sonho.imusik.Adapters.SongAdapter;
-import com.sonhoai.sonho.imusik.Constants.User;
+import com.sonhoai.sonho.imusik.Adapters.DetailPlayListAdapter;
 import com.sonhoai.sonho.imusik.Interface.CallBack;
-import com.sonhoai.sonho.imusik.Models.Song;
+import com.sonhoai.sonho.imusik.Models.DetailPlayList;
 import com.sonhoai.sonho.imusik.R;
+import com.sonhoai.sonho.imusik.Util.SharedPreferencesHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,13 +32,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DetailPlayListFragment extends DialogFragment {
-    private static String idPL = null;
+    public static String idPL = null;
     private static String namePL = null;
     private RecyclerView rcSong;
     private Button btnPlayPlayList;
-    private SongAdapter songAdapter;
+    private DetailPlayListAdapter detailPlayListAdapter;
     private TextView txtNamePlaylist;
-    private List<Song> songList;
+    private List<DetailPlayList> songList;
 
 
     public DetailPlayListFragment() {
@@ -111,8 +109,8 @@ public class DetailPlayListFragment extends DialogFragment {
                 false
         );
         rcSong.setLayoutManager(manager);
-        songAdapter = new SongAdapter(getContext(), songList, R.layout.item_song_pl);
-        rcSong.setAdapter(songAdapter);
+        detailPlayListAdapter = new DetailPlayListAdapter(getContext(), songList);
+        rcSong.setAdapter(detailPlayListAdapter);
     }
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -137,7 +135,8 @@ public class DetailPlayListFragment extends DialogFragment {
                             Log.i("LLELLELEE", array.length()+"");
                             for (int i = 0; i < array.length(); i++){
                                 JSONObject object = array.getJSONObject(i);
-                                songList.add(new Song(
+                                songList.add(new DetailPlayList(
+                                        object.getInt("idDetail"),
                                         object.getInt("idSong"),
                                         object.getInt("idKind"),
                                         object.getInt("idSinger"),
@@ -148,7 +147,7 @@ public class DetailPlayListFragment extends DialogFragment {
                                         object.getString("luotNghe")
                                 ));
                             }
-                            songAdapter.notifyDataSetChanged();
+                            detailPlayListAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -159,6 +158,6 @@ public class DetailPlayListFragment extends DialogFragment {
             public void onFail(String result) {
 
             }
-        }).execute("/PlaylistsApi/"+idPL+"/?list="+User.getInstance(getContext()).idUser+"&token="+User.getInstance(getContext()).token);
+        }).execute("/PlaylistsApi/"+idPL+"/?list="+ SharedPreferencesHelper.getInstance(getContext()).getIdUser()+"&token="+ SharedPreferencesHelper.getInstance(getContext()).getToken());
     }
 }

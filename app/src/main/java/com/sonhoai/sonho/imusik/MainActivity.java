@@ -42,59 +42,53 @@ public class MainActivity extends AppCompatActivity{
     public static TextView txtNameCurrentSong;
     public static ImageView imgNextSong, imgPlayPause;
     public static Context context;
-
+    private String token;
     private BottomNavigationView navigation;
     private LinearLayout linearLayoutBottom;
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            String token =  SharedPreferencesHelper.getInstance(getApplicationContext()).getSharePre("USERINFO", Context.MODE_PRIVATE).getString("tokenUser", "");
-            Log.i("AAAA", token);
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    setFragment(HomeFragment.newInstance());
-
-                    return true;
-                case R.id.navigation_hub:
-                    if(token.isEmpty()){
-                        Log.i("TOKEN", token);
-                        showLoginView();
-                        return false;
-                    }else {
-                        checkToken(token,new CallBack<Boolean>() {
-                            @Override
-                            public void onSuccess(Boolean result) {
-                                if(result){
-                                    setFragment(LibraryFragment.newInstance());
-                                }else {
-                                    showLoginView();
-                                }
-                            }
-
-                            @Override
-                            public void onFail(Boolean result) {
-
-                            }
-                        });
-                        return true;
-                    }
-                case R.id.navigation_menu:
-                    setFragment(MeFragment.newInstance());
-                    return true;
-            }
-            return false;
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                token = SharedPreferencesHelper.getInstance(getApplicationContext()).getToken();
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        setFragment(HomeFragment.newInstance());
+
+                        return true;
+                    case R.id.navigation_hub:
+                        if(token.isEmpty()){
+                            Log.i("TOKEN", token);
+                            showLoginView();
+                            return false;
+                        }else {
+                            checkToken(token,new CallBack<Boolean>() {
+                                @Override
+                                public void onSuccess(Boolean result) {
+                                    if(result){
+                                        setFragment(LibraryFragment.newInstance());
+                                    }else {
+                                        showLoginView();
+                                    }
+                                }
+
+                                @Override
+                                public void onFail(Boolean result) {
+
+                                }
+                            });
+                            return true;
+                        }
+                    case R.id.navigation_menu:
+                        setFragment(MeFragment.newInstance());
+                        return true;
+                }
+                return false;
+            }
+        });
         navigation.setKeepScreenOn(true);
         setFragment(HomeFragment.newInstance());
 
@@ -109,6 +103,9 @@ public class MainActivity extends AppCompatActivity{
     private void init(){
         context = getApplicationContext();
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
+
+        //init
+        SharedPreferencesHelper.getInstance(getApplicationContext());
 
         txtNameCurrentSong = findViewById(R.id.txtNameCurrentSong);
         imgNextSong = findViewById(R.id.imgNextSong);

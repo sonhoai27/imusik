@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class SharedPreferencesHelper {
     private static SharedPreferencesHelper instanse = null;
-    private static Context context;
+    private Context context;
     private int mode;
 
     public static SharedPreferencesHelper getInstance(Context context) {
@@ -26,5 +26,16 @@ public class SharedPreferencesHelper {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(name,content);
         editor.commit();
+    }
+
+    private String idUser;
+    private String token;
+
+    public String getIdUser() {
+        return idUser = getSharePre("USERINFO", Context.MODE_PRIVATE).getString("idUser", "");
+    }
+
+    public String getToken() {
+        return token = getSharePre("USERINFO", Context.MODE_PRIVATE).getString("tokenUser", "");
     }
 }

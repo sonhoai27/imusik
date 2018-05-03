@@ -109,7 +109,7 @@ public class PlayerActivity extends AppCompatActivity {
                 titleSinger = dialogView.findViewById(R.id.dPlayerMoreSinger);
                 titleSong = dialogView.findViewById(R.id.dPlayerMoreTitle);
                 cover = dialogView.findViewById(R.id.dPlayerMoreCover);
-                rateThisSong = dialogView.findViewById(R.id.rateThisSong);
+//                rateThisSong = dialogView.findViewById(R.id.rateThisSong);
 
                 final AlertDialog alertDialog = builder.create();
 
@@ -134,14 +134,14 @@ public class PlayerActivity extends AppCompatActivity {
                     titleSong.setText(song.getNameSong());
 
 
-                    //rate this song
-                    rateThisSong.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            rateSong(song);
-                            alertDialog.dismiss();
-                        }
-                    });
+//                    //rate this song
+//                    rateThisSong.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            rateSong(song);
+//                            alertDialog.dismiss();
+//                        }
+//                    });
                 }
 
                 //show
