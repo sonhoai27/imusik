@@ -52,12 +52,23 @@
             android:layout_height="wrap_content" />
         <Button
             android:textColor="@color/colorWhite"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/gradient_4"
             android:layout_marginTop="16dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Login"
             android:id="@+id/btnLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:visibility="gone"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/gradient_4"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Register"
+            android:id="@+id/btnRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -67,8 +78,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:text="Don't have iMusik ID"
-            android:id="@+id/btnRegister"
+            android:background="@drawable/ripple_bg_song_ls"
+            android:clickable="true"
+            android:padding="8dp"
+            android:text="Don't have an iMusik ID"
+            android:id="@+id/btnShowRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:visibility="gone"
+            android:background="@drawable/ripple_bg_song_ls"
+            android:clickable="true"
+            android:padding="8dp"
+            android:text="Have an iMusik ID"
+            android:id="@+id/btnShowLogin"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
     </LinearLayout>

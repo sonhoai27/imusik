@@ -146,8 +146,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     addToPlayList.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            handleAddToList(songList.get(getAdapterPosition()).getId());
-                            alertDialog.dismiss();
+
+                            if(SharedPreferencesHelper.getInstance(context).getIdUser().isEmpty() && SharedPreferencesHelper.getInstance(context).getToken().isEmpty()){
+                                Toast.makeText(context, "Please, Login", Toast.LENGTH_SHORT).show();
+                                showLoginView();
+                            }else {
+                                handleAddToList(songList.get(getAdapterPosition()).getId());
+                                alertDialog.dismiss();
+                            }
                         }
                     });
                     //custom position
@@ -195,8 +201,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     btnRateSong.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            showRatingView(songList.get(getAdapterPosition()).getId());
-                            alertDialog.dismiss();
+                            if(SharedPreferencesHelper.getInstance(context).getIdUser().isEmpty() && SharedPreferencesHelper.getInstance(context).getToken().isEmpty()){
+                                Toast.makeText(context, "Please, Login", Toast.LENGTH_SHORT).show();
+                                showLoginView();
+                            }else {
+                                showRatingView(songList.get(getAdapterPosition()).getId());
+                                alertDialog.dismiss();
+                            }
                         }
                     });
                     //show
@@ -292,7 +303,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             public void onFail(String result) {
 
             }
-        }).execute("/Loves/?idSong="+idSong+"&idUser="+SharedPreferencesHelper.getInstance(context).getIdUser()+"&token="+SharedPreferencesHelper.getInstance(context).getToken());
+        }).execute("/Loves/?idSong="+idSong);
     }
 
     private void showRatingView(int idSong){
@@ -301,5 +312,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
         fragmentDialog.show(fm, "Rate");
     }
-
+    private void showLoginView(){
+        LoginFragmentDialog fragmentDialog = LoginFragmentDialog.newInstance();
+        fragmentDialog.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppDialogFragmentTheme);
+        FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
+        fragmentDialog.show(fm, "Login");
+    }
 }

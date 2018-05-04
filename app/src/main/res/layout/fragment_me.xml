@@ -20,4 +20,46 @@
         tools:ignore="MissingPrefix"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginRight="16dp"
+                android:textStyle="bold"
+                android:layout_weight="10"
+                android:text="SonHoai"
+                android:textSize="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_weight="1"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/gradient_4"
+                android:text="Log out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="32dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btnChangePass"
+                android:layout_weight="1"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/gradient_5"
+                android:text="Change your password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

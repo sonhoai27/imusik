@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sonhoai.sonho.imusik.API.Get;
@@ -34,7 +35,8 @@ import java.util.HashMap;
 
 public class LoginFragmentDialog extends DialogFragment {
     private static LoginFragmentDialog loginFragmentDialog = null;
-    private Button btnLogin;
+    private Button btnLogin, btnRegister;
+    private TextView btnShowRegister, btnShowLogin;
     private EditText edtEmail, edtPass;
 
     public LoginFragmentDialog() {
@@ -69,6 +71,9 @@ public class LoginFragmentDialog extends DialogFragment {
         btnLogin = view.findViewById(R.id.btnLogin);
         edtEmail = view.findViewById(R.id.userEmail);
         edtPass = view.findViewById(R.id.userPass);
+        btnShowRegister = view.findViewById(R.id.btnShowRegister);
+        btnShowLogin = view.findViewById(R.id.btnShowLogin);
+        btnRegister = view.findViewById(R.id.btnRegister);
 
 
         //init fun
@@ -97,6 +102,28 @@ public class LoginFragmentDialog extends DialogFragment {
 
     private void initFun(){
         actionLogin();
+        showRegister();
+    }
+
+    private void showRegister(){
+        btnShowRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnLogin.setVisibility(View.GONE);
+                btnShowLogin.setVisibility(View.VISIBLE);
+                btnRegister.setVisibility(View.VISIBLE);
+                btnShowRegister.setVisibility(View.GONE);
+            }
+        });
+        btnShowLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnRegister.setVisibility(View.GONE);
+                btnShowRegister.setVisibility(View.VISIBLE);
+                btnShowLogin.setVisibility(View.GONE);
+                btnLogin.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void actionLogin(){
