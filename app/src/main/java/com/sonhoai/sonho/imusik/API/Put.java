@@ -45,10 +45,14 @@ public class Put extends AsyncTask<String, Void, String> {
             httpURLConnection.setRequestProperty("Accept","application/json");
 
             outStream = new BufferedOutputStream(httpURLConnection.getOutputStream());
-            Log.i("AAA", data.toString());
-            outStream.write(data.toString().getBytes(Charset.forName("UTF-8")));
-            outStream.flush();
-            outStream.close();
+            try{
+                Log.i("AAA", data.toString());
+                outStream.write(data.toString().getBytes(Charset.forName("UTF-8")));
+                outStream.flush();
+                outStream.close();
+            }catch (Exception ex){
+
+            }
 
             inputStream = httpURLConnection.getInputStream();
             //khác -1 là vẫn còn

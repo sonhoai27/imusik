@@ -16,12 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sonhoai.sonho.imusik.API.Get;
 import com.sonhoai.sonho.imusik.Adapters.DetailPlayListAdapter;
 import com.sonhoai.sonho.imusik.Interface.CallBack;
 import com.sonhoai.sonho.imusik.Models.DetailPlayList;
 import com.sonhoai.sonho.imusik.R;
+import com.sonhoai.sonho.imusik.Util.PlayerHelper;
 import com.sonhoai.sonho.imusik.Util.SharedPreferencesHelper;
 
 import org.json.JSONArray;
@@ -89,6 +91,7 @@ public class DetailPlayListFragment extends DialogFragment {
 
         rcSong = view.findViewById(R.id.rcSongPL);
         txtNamePlaylist = view.findViewById(R.id.txtNamePlaylist);
+        btnPlayPlayList = view.findViewById(R.id.btnPlayPlayList);
         txtNamePlaylist.setText(namePL);
 
         //init fun
@@ -98,6 +101,20 @@ public class DetailPlayListFragment extends DialogFragment {
     private void initFun(View view) {
         initAdapter(view);
         getSong();
+        playList();
+    }
+
+    private void playList() {
+        btnPlayPlayList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(songList.size()>0){
+                    PlayerHelper.getInstance().addPlayList(songList);
+                }
+                Toast.makeText(getContext(), "Playing", Toast.LENGTH_SHORT).show();
+                Log.i("KAJAAA", String.valueOf(PlayerHelper.getInstance().getSongList()));
+            }
+        });
     }
 
     private void initAdapter(View view){

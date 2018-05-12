@@ -56,10 +56,12 @@ public class MainActivity extends AppCompatActivity{
                 token = SharedPreferencesHelper.getInstance(getApplicationContext()).getToken();
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
+                        autoUpdate();
                         setFragment(HomeFragment.newInstance());
 
                         return true;
                     case R.id.navigation_hub:
+                        autoUpdate();
                         if(token.isEmpty()){
                             Log.i("TOKEN", token);
                             showLoginView();
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity{
                             return true;
                         }
                     case R.id.navigation_menu:
+                        autoUpdate();
                         setFragment(MeFragment.newInstance());
                         return true;
                 }
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity{
                 Intent intent = new Intent(context, PlayerActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
-                overridePendingTransition(0, 0);
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_bottom);
             }
         });
     }
@@ -184,5 +187,13 @@ public class MainActivity extends AppCompatActivity{
         fragmentDialog.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppDialogFragmentTheme);
         FragmentManager fm = getSupportFragmentManager();
         fragmentDialog.show(fm, "Login");
+    }
+
+    private void autoUpdate(){
+        try{
+            MainActivity.txtNameCurrentSong.setText(PlayerHelper.getInstance().getCurrentSong().getNameSong());
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }

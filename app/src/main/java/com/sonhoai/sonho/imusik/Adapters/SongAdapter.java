@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sonhoai.sonho.imusik.API.Get;
+import com.sonhoai.sonho.imusik.API.Post;
+import com.sonhoai.sonho.imusik.API.Put;
 import com.sonhoai.sonho.imusik.Constants.Connect;
 import com.sonhoai.sonho.imusik.Fragments.LoginFragmentDialog;
 import com.sonhoai.sonho.imusik.Fragments.RateFragment;
@@ -100,6 +102,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    updateLuotNghe(songList.get(getAdapterPosition()).getId());
                     MainActivity.txtNameCurrentSong.setText(songList.get(getAdapterPosition()).getNameSong());
                     MainActivity.imgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
                     PlayerHelper.getInstance().play(songList.get(getAdapterPosition()));
@@ -317,5 +320,19 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         fragmentDialog.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppDialogFragmentTheme);
         FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
         fragmentDialog.show(fm, "Login");
+    }
+
+    private void updateLuotNghe(int idSong){
+        new Put(new CallBack<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFail(String result) {
+
+            }
+        }, null).execute("/SongsApi/"+idSong);
     }
 }

@@ -9,6 +9,7 @@ import android.os.Handler;
 import com.sonhoai.sonho.imusik.Activities.PlayerActivity;
 import com.sonhoai.sonho.imusik.Constants.State;
 import com.sonhoai.sonho.imusik.MainActivity;
+import com.sonhoai.sonho.imusik.Models.DetailPlayList;
 import com.sonhoai.sonho.imusik.Models.Song;
 import com.sonhoai.sonho.imusik.R;
 
@@ -42,26 +43,34 @@ public class PlayerHelper {
         addSong(song);
         currentSong = song;
         mediaPlayer.reset();
-        @SuppressLint("StaticFieldLeak") AsyncTask<String, String, String> task = new AsyncTask<String, String, String>() {
-            @Override
-            protected String doInBackground(String... strings) {
-                try {
-                    mediaPlayer.setDataSource(strings[0]);
-                    mediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
+        try{
+            @SuppressLint("StaticFieldLeak") final AsyncTask<String, String, String> task = new AsyncTask<String, String, String>() {
+                @Override
+                protected String doInBackground(String... strings) {
+                    try {
+                        mediaPlayer.setDataSource(strings[0]);
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return "";
                 }
-                return "";
-            }
 
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                mediaPlayer.start();
-                state = State.PLAY;
-            }
-        };
-        task.execute(song.getUrlSong());
+                @Override
+                protected void onPostExecute(String s) {
+                    super.onPostExecute(s);
+                    try{
+                        mediaPlayer.start();
+                        state = State.PLAY;
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                }
+            };
+            task.execute(song.getUrlSong());
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -91,6 +100,7 @@ public class PlayerHelper {
         mediaPlayer.stop();
         state = State.STOP;
         currentSong = null;
+        songList = null;
     }
 
     public void onNext(){
@@ -113,6 +123,24 @@ public class PlayerHelper {
         if (!songList.contains(song)) {
             songList.add(song);
         }
+    }
+
+    public void addPlayList(List<DetailPlayList>  songs){
+        songList.clear();
+        for(int i = 0; i < songs.size();i++){
+            songList.add(new Song(
+                    songs.get(i).getIdSong(),
+                    songs.get(i).getIdKind(),
+                    songs.get(i).getIdSinger(),
+                    songs.get(i).getNameSong(),
+                    songs.get(i).getNameSinger(),
+                    songs.get(i).getImageSong(),
+                    songs.get(i).getUrlSong(),
+                    songs.get(i).getLuotNghe()
+            ));
+        }
+        play(songList.get(0));
+
     }
     public String getState() {
         return state;

@@ -185,7 +185,7 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public static void showCurrentSong(){
-        if(PlayerHelper.getInstance().getSizeList() > 0){
+        if(PlayerHelper.getInstance().getSizeList() > 0 && PlayerHelper.getInstance().getCurrentSong()!=null){
             changeStatePlayPause();
             titleSinger.setText(PlayerHelper.getInstance().getCurrentSong().getNameSinger());
             titleSong.setText(PlayerHelper.getInstance().getCurrentSong().getNameSong());
@@ -254,7 +254,7 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(0, 0);
+        overridePendingTransition(R.anim.slide_up, R.anim.slide_bottom);
     }
 
     private void getRating(final CallBack<String> callBack, int idSong){

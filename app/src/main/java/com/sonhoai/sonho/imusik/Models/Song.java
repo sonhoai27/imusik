@@ -85,4 +85,19 @@ public class Song{
     public void setLuotNghe(String luotNghe) {
         this.luotNghe = luotNghe;
     }
+
+
+    @Override
+    public String toString() {
+        return "Song{" +
+                "id=" + id +
+                ", idKind=" + idKind +
+                ", idSinger=" + idSinger +
+                ", nameSong='" + nameSong + '\'' +
+                ", nameSinger='" + nameSinger + '\'' +
+                ", imageSong='" + imageSong + '\'' +
+                ", urlSong='" + urlSong + '\'' +
+                ", luotNghe='" + luotNghe + '\'' +
+                '}';
+    }
 }

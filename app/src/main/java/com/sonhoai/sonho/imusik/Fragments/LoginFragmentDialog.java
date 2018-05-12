@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,8 +102,9 @@ public class LoginFragmentDialog extends DialogFragment {
     }
 
     private void initFun(){
-        actionLogin();
         showRegister();
+        actionLogin();
+        actionRegister();
     }
 
     private void showRegister(){
@@ -134,6 +136,14 @@ public class LoginFragmentDialog extends DialogFragment {
             }
         });
     }
+    private void actionRegister(){
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleRegister(edtEmail.getText().toString(),edtPass.getText().toString());
+            }
+        });
+    }
     private void handleLogin(String email, String pass){
         JSONObject dataSend = new JSONObject();
         try {
@@ -145,6 +155,7 @@ public class LoginFragmentDialog extends DialogFragment {
         new Post(new CallBack<String>() {
             @Override
             public void onSuccess(String result) {
+                Log.i("FDDFF", result);
                 try {
 
                     JSONObject object = new JSONObject(result);
@@ -165,6 +176,8 @@ public class LoginFragmentDialog extends DialogFragment {
                         );
                         Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
                         getDialog().dismiss();
+                    }else if(object.getInt("status")==400){
+                        Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -176,5 +189,51 @@ public class LoginFragmentDialog extends DialogFragment {
 
             }
         }, dataSend).execute("/Auth/Login");
+    }
+    private void handleRegister(String email, String pass){
+        JSONObject dataSend = new JSONObject();
+        try {
+            dataSend.put("email", email);
+            dataSend.put("pass", pass);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        new Post(new CallBack<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i("FDDFF", result);
+                try {
+
+                    JSONObject object = new JSONObject(result);
+                    if(object.getInt("status") == 200){
+                        SharedPreferencesHelper.getInstance(
+                                getContext()).setSharePre(
+                                "USERINFO",
+                                Context.MODE_PRIVATE,
+                                "tokenUser",
+                                object.getString("message")
+                        );
+                        SharedPreferencesHelper.getInstance(
+                                getContext()).setSharePre(
+                                "USERINFO",
+                                Context.MODE_PRIVATE,
+                                "idUser",
+                                object.getString("id")
+                        );
+                        Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                        getDialog().dismiss();
+                    }else if(object.getInt("status")==400){
+                        Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(String result) {
+
+            }
+        }, dataSend).execute("/Auth/Register");
     }
 }
