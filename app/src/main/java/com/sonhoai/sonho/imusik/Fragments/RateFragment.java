@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,7 +103,7 @@ public class RateFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         int width = getResources().getDisplayMetrics().widthPixels;
-        int height = (int) (getResources().getDisplayMetrics().heightPixels*0.9);
+        int height = (int) (getResources().getDisplayMetrics().heightPixels*1);
         Dialog d = getDialog();
         if (d!=null){
             d.getWindow().setLayout(width, height);
@@ -186,19 +187,20 @@ public class RateFragment extends DialogFragment {
     }
     private void allRate(JSONObject object) {
         try {
-            int a= object.getInt("noLove");
-            int b = object.getInt("littleLove");
-            int c = object.getInt("love");
-            int d = object.getInt("lotsofLove");
-            int e = object.getInt("superLove");
+            double a= object.getDouble("noLove");
+            double b = object.getDouble("littleLove");
+            double c = object.getDouble("love");
+            double d = object.getDouble("lotsofLove");
+            double e = object.getDouble("superLove");
             double sum = (((a*1)+(b*2)+(c*3)+(d*4)+(e*5))/(a+b+c+d+e));
-            rbNum.setRating((int)sum);
-            txtRbText.setText(sum+"");
-            txtrate1.setText(a+"");
-            txtrate2.setText(b+"");
-            txtrate3.setText(c+"");
-            txtrate4.setText(d+"");
-            txtrate5.setText(e+"");
+            Log.i("AAAA", sum+"");
+            rbNum.setRating((float) sum);
+            txtRbText.setText((float)sum+"");
+            txtrate1.setText((int)a+"");
+            txtrate2.setText((int)b+"");
+            txtrate3.setText((int)c+"");
+            txtrate4.setText((int)d+"");
+            txtrate5.setText((int)e+"");
         } catch (JSONException e) {
             e.printStackTrace();
         }

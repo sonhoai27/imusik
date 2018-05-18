@@ -182,11 +182,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                         public void onSuccess(String result) {
                             try {
                                 JSONObject object = new JSONObject(result);
-                                int a = object.getInt("noLove");
-                                int b = object.getInt("littleLove");
-                                int c = object.getInt("love");
-                                int d = object.getInt("lotsofLove");
-                                int e = object.getInt("superLove");
+                                double a = object.getDouble("noLove");
+                                double b = object.getDouble("littleLove");
+                                double c = object.getDouble("love");
+                                double d = object.getDouble("lotsofLove");
+                                double e = object.getDouble("superLove");
                                 double sum = (((a*1)+(b*2)+(c*3)+(d*4)+(e*5))/(a+b+c+d+e));
                                 txtRbText.setText(sum+"");
                                 rbNum.setRating((float) sum);
@@ -311,7 +311,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     private void showRatingView(int idSong){
         RateFragment fragmentDialog = RateFragment.newInstance(idSong+"");
-        fragmentDialog.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppDialogFragmentTheme);
+        fragmentDialog.setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
         FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
         fragmentDialog.show(fm, "Rate");
     }

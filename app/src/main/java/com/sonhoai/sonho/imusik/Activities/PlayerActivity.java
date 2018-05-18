@@ -13,8 +13,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,6 +31,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.sonhoai.sonho.imusik.API.Get;
+import com.sonhoai.sonho.imusik.Adapters.ForYouAdapter;
+import com.sonhoai.sonho.imusik.Adapters.SongAdapter;
 import com.sonhoai.sonho.imusik.Constants.Connect;
 import com.sonhoai.sonho.imusik.Constants.State;
 import com.sonhoai.sonho.imusik.Interface.CallBack;
@@ -42,6 +47,9 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerActivity extends AppCompatActivity {
     private Handler handler;
     private ImageView btnClosePlayer,
@@ -51,7 +59,10 @@ public class PlayerActivity extends AppCompatActivity {
     private static ImageView imgCoverSong, imgPlayPause,imgNextSong;
     public static Context context;
 
+    private List<Song> songList;
+    private SongAdapter songAdapter;
     private SeekBar seekBarPlayer;
+    private RecyclerView lvCurrentSong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +75,9 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void init(){
+        lvCurrentSong = findViewById(R.id.listCurrentSongs);
         btnClosePlayer = findViewById(R.id.btnClosePlayer);
         imgCoverSong = findViewById(R.id.coverSong);
-        imgShowCurrentList = findViewById(R.id.currentList);
         imgPlayPause = findViewById(R.id.playPause);
         imgNextSong = findViewById(R.id.nextSong);
         btnPlayerMore = findViewById(R.id.btnPlayerMore);
@@ -94,6 +105,31 @@ public class PlayerActivity extends AppCompatActivity {
         showCurrentSong();
         nextSong();
         playPause();
+    }
+
+    private void initListSong(){
+
+        songList = new ArrayList<>();
+        lvCurrentSong.setHasFixedSize(true);
+        LinearLayoutManager manager = new LinearLayoutManager(
+                PlayerActivity.this,
+                LinearLayoutManager.VERTICAL,
+                false
+        );
+        lvCurrentSong.setLayoutManager(manager);
+        songAdapter = new SongAdapter(PlayerActivity.this, songList);
+        lvCurrentSong.setAdapter(songAdapter);
+        initListCurrentSong();
+    }
+
+    private void initListCurrentSong(){
+        if(PlayerHelper.getInstance().getSizeList() > 0){
+            for(int i = 0; i < PlayerHelper.getInstance().getSizeList(); i++){
+                songList.add(PlayerHelper.getInstance().getSongList().get(i));
+            }
+            songAdapter.notifyDataSetChanged();
+            Log.i("KAKAAA", songList.size()+"AAA");
+        }
     }
     private void showPlayerMore(){
         btnPlayerMore.setOnClickListener(new View.OnClickListener() {
@@ -269,5 +305,17 @@ public class PlayerActivity extends AppCompatActivity {
 
             }
         }).execute("/Loves/?idSong="+idSong+"&idUser="+ SharedPreferencesHelper.getInstance(context).getIdUser()+"&token="+SharedPreferencesHelper.getInstance(context).getToken());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initListSong();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initListSong();
     }
 }

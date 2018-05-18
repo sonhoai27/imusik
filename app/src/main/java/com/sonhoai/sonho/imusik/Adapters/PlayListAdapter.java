@@ -109,7 +109,7 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.ViewHo
 
     private void showSongView(int po){
         DetailPlayListFragment fragmentDialog = DetailPlayListFragment.newInstance(String.valueOf(playlists.get(po).getId()), playlists.get(po).getName());
-        fragmentDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppDialogFullFragmentTheme);
+        fragmentDialog.setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
         FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
         fragmentDialog.show(fm, "AAA");
     }

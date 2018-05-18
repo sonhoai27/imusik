@@ -6,32 +6,41 @@
     android:background="@color/colorWhite"
     tools:context=".Fragments.DetailPlayListFragment">
     <LinearLayout
-        android:padding="8dp"
         android:gravity="center"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:textColor="@color/colorBlack"
+        <LinearLayout
+            android:paddingBottom="32dp"
+            android:background="@drawable/bg_gradient_header_pl"
             android:gravity="center"
-            android:textStyle="bold"
-            android:layout_marginTop="32dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
-            android:id="@+id/txtNamePlaylist"
-            android:text="HAHAHA"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btnPlayPlayList"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/gradient_2"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="shuffle play"
-            android:textColor="@color/colorWhite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@color/colorWhite"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_marginTop="32dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                android:id="@+id/txtNamePlaylist"
+                android:text="HAHAHA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Button
+                android:elevation="16dp"
+                android:id="@+id/btnPlayPlayList"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/gradient_2"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="shuffle play"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
         <android.support.v7.widget.RecyclerView
+            android:padding="8dp"
             android:id="@+id/rcSongPL"
             android:layout_marginTop="32dp"
             android:layout_width="match_parent"

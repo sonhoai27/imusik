@@ -1,10 +1,15 @@
 package com.sonhoai.sonho.imusik.Util;
 
 import android.annotation.SuppressLint;
+import android.app.Service;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Handler;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 
 import com.sonhoai.sonho.imusik.Activities.PlayerActivity;
 import com.sonhoai.sonho.imusik.Constants.State;
@@ -17,12 +22,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerHelper {
+public class PlayerHelper extends Service{
     private static PlayerHelper instanse = null;
     private MediaPlayer mediaPlayer;
     private List<Song> songList;
     private String state;
     private Song currentSong;
+
+    private final IBinder mBinder = new ServiceBinder();
 
     public static PlayerHelper getInstance() {
         if (instanse == null) {
@@ -31,15 +38,31 @@ public class PlayerHelper {
         return instanse;
     }
 
+    public class ServiceBinder extends Binder {
+        public PlayerHelper getService()
+        {
+            return PlayerHelper.this;
+        }
+    }
+
     private PlayerHelper() {
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer = new MediaPlayer();
         songList = new ArrayList<>();
         state = State.STOP;
         currentSong = null;
     }
 
+
+    //services notitfication
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
     public void play(final Song song){
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
         addSong(song);
         currentSong = song;
         mediaPlayer.reset();
@@ -142,6 +165,13 @@ public class PlayerHelper {
         play(songList.get(0));
 
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        return Service.START_STICKY;
+    }
+
     public String getState() {
         return state;
     }

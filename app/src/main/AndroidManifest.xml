@@ -24,6 +24,7 @@
             android:name=".Activities.PlayerActivity"
             android:label="@string/title_activity_player"
             android:theme="@style/AppTheme"></activity>
+        <service android:name=".Services.TimerServies" android:exported="false"/>
     </application>
 
 </manifest>
