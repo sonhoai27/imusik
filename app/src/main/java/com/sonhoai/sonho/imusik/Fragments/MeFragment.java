@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.sonhoai.sonho.imusik.API.Post;
+import com.sonhoai.sonho.imusik.Adapters.SongAdapter;
 import com.sonhoai.sonho.imusik.Interface.CallBack;
 import com.sonhoai.sonho.imusik.R;
 import com.sonhoai.sonho.imusik.Util.PlayerHelper;
@@ -74,7 +75,7 @@ public class MeFragment extends Fragment {
                         "idUser",
                         ""
                 );
-                PlayerHelper.getInstance().onStop();
+                SongAdapter.helper.onStop();
                 Intent i = getActivity().getBaseContext().getPackageManager()
                         .getLaunchIntentForPackage( getActivity().getBaseContext().getPackageName() );
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

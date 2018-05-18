@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.sonhoai.sonho.imusik.API.Get;
 import com.sonhoai.sonho.imusik.Adapters.DetailPlayListAdapter;
+import com.sonhoai.sonho.imusik.Adapters.SongAdapter;
 import com.sonhoai.sonho.imusik.Interface.CallBack;
+import com.sonhoai.sonho.imusik.MainActivity;
 import com.sonhoai.sonho.imusik.Models.DetailPlayList;
 import com.sonhoai.sonho.imusik.R;
 import com.sonhoai.sonho.imusik.Util.PlayerHelper;
@@ -109,14 +111,21 @@ public class DetailPlayListFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if(songList.size()>0){
-                    PlayerHelper.getInstance().addPlayList(songList);
+                    SongAdapter.helper.addPlayList(songList);
+                    songViewBar();
                 }
                 Toast.makeText(getContext(), "Playing", Toast.LENGTH_SHORT).show();
-                Log.i("KAJAAA", String.valueOf(PlayerHelper.getInstance().getSongList()));
+                Log.i("KAJAAA", String.valueOf(SongAdapter.helper.getSongList()));
             }
         });
     }
-
+    private void songViewBar(){
+        if(SongAdapter.helper.getCurrentSong() == null || SongAdapter.helper  == null){
+            return;
+        }
+        MainActivity.txtNameCurrentSong.setText(SongAdapter.helper.getCurrentSong().getNameSong());
+        MainActivity.imgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
+    }
     private void initAdapter(View view){
         songList = new ArrayList<>();
         rcSong.setHasFixedSize(true);

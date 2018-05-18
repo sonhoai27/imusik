@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.sonhoai.sonho.imusik.API.Get;
 import com.sonhoai.sonho.imusik.Activities.PlayerActivity;
+import com.sonhoai.sonho.imusik.Adapters.SongAdapter;
 import com.sonhoai.sonho.imusik.Constants.State;
 import com.sonhoai.sonho.imusik.Fragments.HomeFragment;
 import com.sonhoai.sonho.imusik.Fragments.LibraryFragment;
@@ -56,12 +57,12 @@ public class MainActivity extends AppCompatActivity{
                 token = SharedPreferencesHelper.getInstance(getApplicationContext()).getToken();
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        autoUpdate();
+
                         setFragment(HomeFragment.newInstance());
 
                         return true;
                     case R.id.navigation_hub:
-                        autoUpdate();
+
                         if(token.isEmpty()){
                             Log.i("TOKEN", token);
                             showLoginView();
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity{
                             return true;
                         }
                     case R.id.navigation_menu:
-                        autoUpdate();
+
                         setFragment(MeFragment.newInstance());
                         return true;
                 }
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void init(){
+        new SongAdapter(MainActivity.this);
         context = getApplicationContext();
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
 
@@ -135,11 +137,11 @@ public class MainActivity extends AppCompatActivity{
         imgPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(PlayerHelper.getInstance().getState() == State.PLAY){
-                    PlayerHelper.getInstance().onPause();
+                if(SongAdapter.helper.getState() == State.PLAY){
+                    SongAdapter.helper.onPause();
                     imgPlayPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-                }else if(PlayerHelper.getInstance().getState() == State.PAUSE){
-                    PlayerHelper.getInstance().onResume();
+                }else if(SongAdapter.helper.getState() == State.PAUSE){
+                    SongAdapter.helper.onResume();
                     imgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
                 }
             }
@@ -149,10 +151,10 @@ public class MainActivity extends AppCompatActivity{
         imgNextSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(PlayerHelper.getInstance().getSizeList() <= 1){
+                if(SongAdapter.helper.getSizeList() <= 1){
                     Toast.makeText(getApplicationContext(), "Danh sách chỉ chứa 1 bài.", Toast.LENGTH_SHORT).show();
                 }else {
-                    PlayerHelper.getInstance().onNext();
+                    SongAdapter.helper.onNext();
                 }
             }
         });
@@ -187,13 +189,5 @@ public class MainActivity extends AppCompatActivity{
         fragmentDialog.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppDialogFragmentTheme);
         FragmentManager fm = getSupportFragmentManager();
         fragmentDialog.show(fm, "Login");
-    }
-
-    private void autoUpdate(){
-        try{
-            MainActivity.txtNameCurrentSong.setText(PlayerHelper.getInstance().getCurrentSong().getNameSong());
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
     }
 }

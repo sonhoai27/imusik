@@ -69,7 +69,7 @@ public class PlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         init();
-        if(PlayerHelper.getInstance().getState() == State.PLAY){
+        if(SongAdapter.helper.getState() == State.PLAY){
             handleSeekBar();
         }
     }
@@ -90,8 +90,8 @@ public class PlayerActivity extends AppCompatActivity {
         seekBarPlayer = findViewById(R.id.seekBarPlayer);
         seekBarPlayer.setEnabled(false);
 
-        if(PlayerHelper.getInstance().getState() == State.PLAY){
-            seekBarPlayer.setMax(PlayerHelper.getInstance().getMediaPlayer().getDuration());
+        if(SongAdapter.helper.getState() == State.PLAY){
+            seekBarPlayer.setMax(SongAdapter.helper.getMediaPlayer().getDuration());
         }else {
             seekBarPlayer.setMax(0);
         }
@@ -123,9 +123,9 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void initListCurrentSong(){
-        if(PlayerHelper.getInstance().getSizeList() > 0){
-            for(int i = 0; i < PlayerHelper.getInstance().getSizeList(); i++){
-                songList.add(PlayerHelper.getInstance().getSongList().get(i));
+        if(SongAdapter.helper.getSizeList() > 0){
+            for(int i = 0; i < SongAdapter.helper.getSizeList(); i++){
+                songList.add(SongAdapter.helper.getSongList().get(i));
             }
             songAdapter.notifyDataSetChanged();
             Log.i("KAKAAA", songList.size()+"AAA");
@@ -135,7 +135,7 @@ public class PlayerActivity extends AppCompatActivity {
         btnPlayerMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Song song = PlayerHelper.getInstance().getCurrentSong();
+                final Song song = SongAdapter.helper.getCurrentSong();
                 AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(PlayerActivity.this, R.style.myDialog));
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.dialog_show_more_player, null);
@@ -168,7 +168,7 @@ public class PlayerActivity extends AppCompatActivity {
                 dialogWindow.setGravity(Gravity.CENTER | Gravity.BOTTOM);
                 dialogWindow.setAttributes(lp);
 
-                if(PlayerHelper.getInstance().getSizeList() != 0){
+                if(SongAdapter.helper.getSizeList() != 0){
                     //set data
                     Picasso.with(getApplicationContext())
                             .load(Connect.URLASSET+song.getImageSong())
@@ -201,7 +201,7 @@ public class PlayerActivity extends AppCompatActivity {
                         public void onFail(String result) {
 
                         }
-                    }, PlayerHelper.getInstance().getCurrentSong().getId());
+                    }, SongAdapter.helper.getCurrentSong().getId());
                 }
 
                 //show
@@ -221,12 +221,12 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public static void showCurrentSong(){
-        if(PlayerHelper.getInstance().getSizeList() > 0 && PlayerHelper.getInstance().getCurrentSong()!=null){
+        if(SongAdapter.helper.getSizeList() > 0 && SongAdapter.helper.getCurrentSong()!=null){
             changeStatePlayPause();
-            titleSinger.setText(PlayerHelper.getInstance().getCurrentSong().getNameSinger());
-            titleSong.setText(PlayerHelper.getInstance().getCurrentSong().getNameSong());
+            titleSinger.setText(SongAdapter.helper.getCurrentSong().getNameSinger());
+            titleSong.setText(SongAdapter.helper.getCurrentSong().getNameSong());
             Picasso.with(context)
-                    .load(Connect.URLASSET + PlayerHelper.getInstance().getCurrentSong().getImageSong())
+                    .load(Connect.URLASSET + SongAdapter.helper.getCurrentSong().getImageSong())
                     .resize(550, 550)
                     .centerCrop()
                     .into(imgCoverSong);
@@ -236,17 +236,17 @@ public class PlayerActivity extends AppCompatActivity {
         imgNextSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(PlayerHelper.getInstance().getSizeList() > 0){
-                    PlayerHelper.getInstance().onNext();
+                if(SongAdapter.helper.getSizeList() > 0){
+                    SongAdapter.helper.onNext();
                     showCurrentSong();
                 }
             }
         });
     }
     private static void changeStatePlayPause(){
-        if(PlayerHelper.getInstance().getState() == State.PLAY){
+        if(SongAdapter.helper.getState() == State.PLAY){
             imgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
-        }else if(PlayerHelper.getInstance().getState() == State.PAUSE){
+        }else if(SongAdapter.helper.getState() == State.PAUSE){
             imgPlayPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
         }
     }
@@ -254,11 +254,11 @@ public class PlayerActivity extends AppCompatActivity {
         imgPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(PlayerHelper.getInstance().getState() == State.PLAY){
-                    PlayerHelper.getInstance().onPause();
+                if(SongAdapter.helper.getState() == State.PLAY){
+                    SongAdapter.helper.onPause();
                     changeStatePlayPause();
-                }else if(PlayerHelper.getInstance().getState() == State.PAUSE){
-                    PlayerHelper.getInstance().onResume();
+                }else if(SongAdapter.helper.getState() == State.PAUSE){
+                    SongAdapter.helper.onResume();
                     changeStatePlayPause();
                     handleSeekBar();
                 }
@@ -267,8 +267,8 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void updateSeekBar(){
-        seekBarPlayer.setProgress(PlayerHelper.getInstance().getMediaPlayer().getCurrentPosition());
-        if(PlayerHelper.getInstance().getState() == State.PLAY){
+        seekBarPlayer.setProgress(SongAdapter.helper.getMediaPlayer().getCurrentPosition());
+        if(SongAdapter.helper.getState() == State.PLAY){
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -317,5 +317,6 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         initListSong();
+        SongAdapter.helper.reupdateNameSong();
     }
 }

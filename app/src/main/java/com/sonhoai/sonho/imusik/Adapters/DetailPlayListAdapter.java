@@ -112,7 +112,7 @@ public class DetailPlayListAdapter extends RecyclerView.Adapter<DetailPlayListAd
                             detailPlayLists.get(getAdapterPosition()).getUrlSong(),
                             detailPlayLists.get(getAdapterPosition()).getLuotNghe()
                     );
-                    PlayerHelper.getInstance().play(song);
+                    SongAdapter.helper.play(song);
                     if(dialog != null && flag == 1){
                         dialog.dismiss();
                     }

@@ -1,8 +1,12 @@
 package com.sonhoai.sonho.imusik.Adapters;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.content.Context;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -48,13 +52,37 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
+    private static boolean serviceInit = false;
+    public static PlayerHelper helper;
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PlayerHelper.ServiceBinder binder = (PlayerHelper.ServiceBinder)service;
+            helper = binder.getService();
+            serviceInit = true;
+            songViewBar();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
     private Context context;
     private List<Song> songList;
 
     public SongAdapter(Context context, List<Song> songList) {
         this.context = context;
         this.songList = songList;
+    }
+
+    public SongAdapter(Context context){
+        this.context = context;
+        initMusicServices();
     }
 
     @NonNull
@@ -102,10 +130,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    updateLuotNghe(songList.get(getAdapterPosition()).getId());
-                    MainActivity.txtNameCurrentSong.setText(songList.get(getAdapterPosition()).getNameSong());
-                    MainActivity.imgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
-                    PlayerHelper.getInstance().play(songList.get(getAdapterPosition()));
+
+                    helper.play(songList.get(getAdapterPosition()));
+                    songViewBar();
                     if(dialog != null && flag == 1){
                         dialog.dismiss();
                     }
@@ -334,5 +361,24 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
             }
         }, null).execute("/SongsApi/"+idSong);
+    }
+
+    private void songViewBar(){
+        if(helper.getCurrentSong() == null || helper  == null){
+            return;
+        }
+        updateLuotNghe(helper.getCurrentSong().getId());
+        MainActivity.txtNameCurrentSong.setText(helper.getCurrentSong().getNameSong());
+        MainActivity.imgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
+    }
+
+    private void initMusicServices(){
+        //chua khoi tao
+        if(serviceInit){
+           return;
+        }
+        Intent intent = new Intent(context, PlayerHelper.class);
+        context.startService(intent);
+        context.bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 }
