@@ -190,4 +190,16 @@ public class MainActivity extends AppCompatActivity{
         FragmentManager fm = getSupportFragmentManager();
         fragmentDialog.show(fm, "Login");
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            if(SongAdapter.helper != null){
+                SongAdapter.helper.reupdateNameSong();
+            }
+        }catch (Exception e){
+
+        }
+    }
 }

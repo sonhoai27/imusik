@@ -57,21 +57,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     private static boolean serviceInit = false;
     public static PlayerHelper helper;
 
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            PlayerHelper.ServiceBinder binder = (PlayerHelper.ServiceBinder)service;
-            helper = binder.getService();
-            serviceInit = true;
-            songViewBar();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
-
     private Context context;
     private List<Song> songList;
 
@@ -372,6 +357,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         MainActivity.imgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
     }
 
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PlayerHelper.ServiceBinder binder = (PlayerHelper.ServiceBinder)service;
+            helper = binder.getService();
+            serviceInit = true;
+            songViewBar();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
     private void initMusicServices(){
         //chua khoi tao
         if(serviceInit){

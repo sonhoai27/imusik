@@ -177,7 +177,8 @@ public class PlayerHelper extends Service {
     }
 
     public void reupdateNameSong(){
-        MainActivity.txtNameCurrentSong.setText(currentSong.getNameSong());
+        MainActivity.txtNameCurrentSong.setText(getCurrentSong().getNameSong());
+        MainActivity.imgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
     }
     public void addSong(Song song) {
         try {

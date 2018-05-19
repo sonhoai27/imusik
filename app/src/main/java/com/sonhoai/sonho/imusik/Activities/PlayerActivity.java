@@ -317,6 +317,5 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         initListSong();
-        SongAdapter.helper.reupdateNameSong();
     }
 }
